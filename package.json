@@ -1,0 +1,42 @@
+{
+  "name": "cyclejs-experimental-canvas2d",
+  "version": "0.0.1",
+  "description": "project I'm doing to learn cyclejs",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blimusiek/cyclejs-experimental-canvas2d"
+  },
+  "keywords": [
+    "cyclejs",
+    "rx",
+    "example",
+    "canvas",
+    "2d"
+  ],
+  "author": "Maciek Blim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/blimusiek/cyclejs-experimental-canvas2d/issues"
+  },
+  "homepage": "https://github.com/blimusiek/cyclejs-experimental-canvas2d#readme",
+  "dependencies": {
+    "@cycle/core": "^6.0.0",
+    "@cycle/dom": "^9.0.1",
+    "rx": "^4.0.7"
+  },
+  "devDependencies": {
+    "babel-core": "^6.3.26",
+    "babel-eslint": "^4.1.6",
+    "babel-loader": "^6.2.1",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "gulp": "^3.9.0",
+    "gulp-eslint": "^1.1.1",
+    "gulp-webserver": "^0.9.1",
+    "webpack": "^1.12.9"
+  }
+}
