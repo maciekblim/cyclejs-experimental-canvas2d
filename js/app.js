@@ -2,6 +2,15 @@ import Cycle from '@cycle/core';
 import {Observable} from 'rx';
 import {makeCanvas2DDriver, stage, rect, filled} from './drivers/2d';
 
+import {scale, translate} from './drivers/math';
+import {rect2} from './drivers/graphics';
+
+const r =
+    rect2(10, 10)
+        (translate(15, 15))
+        (scale(2, 4))
+        ();
+console.log(r);
 
 function main(/*{canvas2D}*/) {
     // just to test

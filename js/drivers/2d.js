@@ -29,6 +29,10 @@ function clearCanvas (ctx, width, height) {
 }
 
 function render (ctx, stage) {
+    // TODO ctx be reseted here ?
+    // ctx.setTransform(1, 0, 0, 1, 0, 0);
+    // ctx.globalAlpha = 1;
+
     stage.forEach(child => renderShape(ctx, child));
 }
 
@@ -78,3 +82,11 @@ export function filled (color, shape) {
     Object.assign(copy.style = copy.style || {}, {fill: color});
     return copy;
 }
+
+// move([15, 10], rotate(10, scale(2, rect(10, 10))))
+// rect(10, 10)
+//     (scale(2))
+//     (rotate(10))
+//     (move([15, 10]))
+//     () // just because it is JavaScript
+
