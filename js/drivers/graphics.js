@@ -23,8 +23,18 @@ export function rect (width, height) {
 // export function ngon (n, radius) {}
 // export function polygon(corners) {}
 
-// fill = Color -> Shape
+// Shape -> Shape
+function style (effect) {
+    return (s => shape.apply(null, s().map((v, i) => RENDERABLE_STYLE === i ? Object.assign({}, v, effect) : v)));
+}
+
+// filled = Color -> Shape
 export function filled (color) {
-    const style = { fill: color };
-    return (primitive => shape.apply(null, primitive().map((v, i) => RENDERABLE_STYLE === i ? Object.assign({}, v, style) : v)));
+    const effect = { fill: color };
+    return style(effect);
+}
+
+export function stroked (color) {
+    const effect = { stroke: color };
+    return style(effect);
 }

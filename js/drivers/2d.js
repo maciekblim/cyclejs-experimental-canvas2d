@@ -1,14 +1,34 @@
 import {Observable} from 'rx';
 import {RENDERABLE_TYPE, RENDERABLE_ARGS, RENDERABLE_MATRIX, RENDERABLE_STYLE} from './graphics';
 
-
-function applyStyles(style, next) {
+// pack everything inside ctx.save(), ctx.restore()
+function transaction(next) {
     return (ctx => {
-        // TODO currently only fill
-        ctx.fillStyle = style.fill;
+        ctx.save();
+        next(ctx);
+        ctx.restore();
+    });
+}
+
+function applyFill(color, next) {
+    return (ctx => {
+        ctx.fillStyle = color;
         next(ctx);
         ctx.fill();
-    });
+    })
+}
+
+function applyStroke(color, next) {
+    return (ctx => {
+        ctx.strokeStyle = color;
+        next(ctx);
+        ctx.stroke();
+    })
+}
+
+function applyStyles(style, next) {
+    if (style.fill) return applyFill(style.fill, next);
+    if (style.stroke) return applyStroke(style.stroke, next);
 }
 
 function applyTransform(m /* shape transform matrix */, next) {
@@ -47,11 +67,13 @@ function draw(type) {
 
 function renderShape (ctx, renderable) {
     // TODO render shapes
-    applyStyles(renderable[RENDERABLE_STYLE], ctx => {
-        applyTransform(renderable[RENDERABLE_MATRIX], ctx => {
-            draw(renderable[RENDERABLE_TYPE])
-                (renderable[RENDERABLE_ARGS])
-                (ctx);
+    transaction(ctx => {
+        applyStyles(renderable[RENDERABLE_STYLE], ctx => {
+            applyTransform(renderable[RENDERABLE_MATRIX], ctx => {
+                draw(renderable[RENDERABLE_TYPE])
+                    (renderable[RENDERABLE_ARGS])
+                    (ctx);
+            })(ctx);
         })(ctx);
     })(ctx);
     // if ('rect' === renderable[RENDERABLE_TYPE]) {
@@ -79,9 +101,9 @@ function clearCanvas (ctx, width, height) {
 }
 
 function render (ctx, stage) {
-    // TODO ctx be reseted here ?
-    // ctx.setTransform(1, 0, 0, 1, 0, 0);
-    // ctx.globalAlpha = 1;
+    // TODO should ctx be reseted here ?
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalAlpha = 1;
 
     stage.forEach(child => renderShape(ctx, child()));
 }

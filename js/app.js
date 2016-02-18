@@ -1,31 +1,42 @@
 import Cycle from '@cycle/core';
-import {Observable} from 'rx';
+import {Observable, Scheduler} from 'rx';
 import {makeCanvas2DDriver, stage} from './drivers/2d';
 
-import {scale, translate} from './drivers/math';
-import {rect, filled} from './drivers/graphics';
+import {scale, translate, rotate, shear} from './drivers/transformations';
+import {rect, filled, stroked} from './drivers/graphics';
 
 function main(/*{canvas2D}*/) {
     // just to test
-    const r1$ = Observable
-        .interval(1000)
-        .take(10)
-        .map(x => x * 10)
-        .map(l =>
-            filled('#6c0')
-                (rect(l, l))
-                (translate(15, 15))
-                (scale(2, 4))
-        )
-
+    // const r1$ = Observable
+    //     .interval(1000, Scheduler.requestAnimationFrame)
+    //     .take(10)
+    //     .map(() =>
+    //         stroked('#6c0')
+    //             (rect(100, 100))
+    //             (scale(1, 2))
+    //             (shear(0.5, 0.25))
+    //             (translate(100, 0))
+    //     );
+    const r1$ = Observable.of(
+            stroked('#6c0')
+                (rect(100, 100))
+                (scale(1, 2))
+                (shear(0.5, 0.25))
+                (translate(100, 0))
+            );
     const r2$ = Observable
-        .interval(200)
-        .take(30)
-        .map(x => x * 5)
-        .map(l =>
+        .interval(1000 / 35, Scheduler.requestAnimationFrame)
+        .take(100)
+        .map(x => x + 1)
+        .map(x =>
             filled('#f30')
-                (rect(l, l))
-                (translate(110, 150))
+                (rect(30, 30))
+                // 2 * Math.PI / 8 = 45 degrees
+                (translate(-15, -15))
+                (scale(1, 2))
+                (rotate(x * ((2 * Math.PI) / 32)))
+                (translate(100, 100))
+                // (translate(x, 150))
         );
 
     const stage$ = Observable.combineLatest(r1$, r2$, (r1, r2) =>
