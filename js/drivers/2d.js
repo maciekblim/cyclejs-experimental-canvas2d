@@ -1,19 +1,69 @@
 import {Observable} from 'rx';
+import {RENDERABLE_TYPE, RENDERABLE_ARGS, RENDERABLE_MATRIX, RENDERABLE_STYLE} from './graphics';
 
-function renderShape (ctx, shape) {
-    // TODO render shapes
-    if ('rect' === shape.type) {
-        // do it by recurention
-        // TODO currently only filled objects
-        ctx.fillStyle = shape.style.fill;
-        ctx.beginPath();
-        ctx.moveTo(shape.x, shape.y);
-        ctx.lineTo(shape.x + shape.width, shape.y);
-        ctx.lineTo(shape.x + shape.width, shape.y + shape.height);
-        ctx.lineTo(shape.x, shape.y + shape.height);
-        ctx.closePath();
+
+function applyStyles(style, next) {
+    return (ctx => {
+        // TODO currently only fill
+        ctx.fillStyle = style.fill;
+        next(ctx);
         ctx.fill();
+    });
+}
+
+function applyTransform(m /* shape transform matrix */, next) {
+    return (ctx => {
+        // TODO use that a, b, c, ... consts
+        ctx.setTransform(m[0], m[3], m[1], m[4], m[2], m[5]);
+        next(ctx);
+    });
+}
+
+function drawRect(args) {
+    // TODO
+    const width = args[0];
+    const height = args[1];
+    return (ctx => {
+        // TODO move it to functions
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(width, 0);
+        ctx.lineTo(width, height);
+        ctx.lineTo(0, height);
+        ctx.closePath();
+        // TODO what to return from here ?
+    });
+}
+
+function draw(type) {
+    // TODO I don't like that switch
+    switch (type) {
+        case 'rect':
+            return drawRect;
+        default:
+            return;
     }
+}
+
+function renderShape (ctx, renderable) {
+    // TODO render shapes
+    applyStyles(renderable[RENDERABLE_STYLE], ctx => {
+        applyTransform(renderable[RENDERABLE_MATRIX], ctx => {
+            draw(renderable[RENDERABLE_TYPE])
+                (renderable[RENDERABLE_ARGS])
+                (ctx);
+        })(ctx);
+    })(ctx);
+    // if ('rect' === renderable[RENDERABLE_TYPE]) {
+        // ctx.fillStyle = shape.style.fill;
+        // ctx.beginPath();
+        // ctx.moveTo(shape.x, shape.y);
+        // ctx.lineTo(shape.x + shape.width, shape.y);
+        // ctx.lineTo(shape.x + shape.width, shape.y + shape.height);
+        // ctx.lineTo(shape.x, shape.y + shape.height);
+        // ctx.closePath();
+        // ctx.fill();
+    // }
 }
 
 function clearCanvas (ctx, width, height) {
@@ -33,7 +83,7 @@ function render (ctx, stage) {
     // ctx.setTransform(1, 0, 0, 1, 0, 0);
     // ctx.globalAlpha = 1;
 
-    stage.forEach(child => renderShape(ctx, child));
+    stage.forEach(child => renderShape(ctx, child()));
 }
 
 function canvas2DDriver (ctx, width, height) {
