@@ -55,11 +55,69 @@ function drawRect(args) {
     });
 }
 
+function drawOval(args) {
+    // TODO
+    // taken from http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
+    //
+    const w = args[0];
+    const h = args[1];
+
+    const kappa = 0.5522848;
+    const w2 = w * 2;
+    const h2 = h * 2;
+    // because we want to draw relative to (0, 0)
+    const x = -w; // 0 ??
+    const y = -h; // 0 ??
+
+    const ox = w * kappa; // control point offset horizontal
+    const oy = h * kappa; // control point offset vertical
+    const xe = x + w2;    // x-end
+    const ye = y + h2;    // y-end
+    const xm = x + w;     // x-middle
+    const ym = y + h;     // y-middle
+
+    return (ctx => {
+        // TODO
+        ctx.beginPath();
+        ctx.moveTo(x, ym);
+        ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+        ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+        ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+        ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+        ctx.closePath();
+    });
+}
+
+function drawNgon (args) {
+    const n = args[0];
+    const r = args[1];
+
+    // because we want have (0,0) in the center
+    const x = 0;
+    const y = 0;
+
+    return (ctx => {
+        // TODO
+        // from http://scienceprimer.com/drawing-regular-polygons-javascript-canvas
+        ctx.beginPath();
+        ctx.moveTo(x + r * Math.cos(0), y + r * Math.sin(0));
+        // TODO something is not working here !!
+        (Array(n))
+            .map((v, i) => [x + r * Math.cos(i * 2 * Math.PI / n), y + r * Math.sin(i * 2 * Math.PI / n)])
+            .forEach(xy => ctx.lineTo(xy[0], xy[1]));
+        ctx.closePath();
+    });
+}
+
 function draw(type) {
     // TODO I don't like that switch
     switch (type) {
         case 'rect':
             return drawRect;
+        case 'oval':
+            return drawOval;
+        case 'ngon':
+            return drawNgon;
         default:
             return;
     }

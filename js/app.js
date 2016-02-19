@@ -2,8 +2,10 @@ import Cycle from '@cycle/core';
 import {Observable, Scheduler} from 'rx';
 import {makeCanvas2DDriver, stage} from './drivers/2d';
 
+/*eslint-disable no-unused-vars*/
 import {scale, translate, rotate, shear} from './drivers/transformations';
-import {rect, filled, stroked} from './drivers/graphics';
+import {rect, filled, stroked, oval, ngon} from './drivers/graphics';
+/*eslint-enable no-unused-vars*/
 
 function main(/*{canvas2D}*/) {
     // just to test
@@ -17,12 +19,17 @@ function main(/*{canvas2D}*/) {
     //             (shear(0.5, 0.25))
     //             (translate(100, 0))
     //     );
+    // const r1$ = Observable.of(
+    //         stroked('#6c0')
+    //             (rect(100, 100))
+    //             (scale(1, 2))
+    //             (shear(0.5, 0.25))
+    //             (translate(100, 0))
+    //         );
     const r1$ = Observable.of(
             stroked('#6c0')
-                (rect(100, 100))
-                (scale(1, 2))
-                (shear(0.5, 0.25))
-                (translate(100, 0))
+                (oval(50, 50))
+                (translate(100, 100))
             );
     const r2$ = Observable
         .interval(1000 / 35, Scheduler.requestAnimationFrame)

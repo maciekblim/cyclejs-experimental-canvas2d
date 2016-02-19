@@ -8,32 +8,55 @@ export const RENDERABLE_STYLE = 3;
 
 
 // kabum !!!!????!!!!
-// shape = RenderableType -> RenderableArgs -> Matrix -> ... Renderable
+// shape = RenderableType -> RenderableArgs -> Matrix -> Style -> ... Renderable
 function shape (type, args, matrix, styles) {
     return (transformation => transformation ? shape(type, args, transformation(matrix), styles) : [type, args, matrix, styles]);
 }
 
+// --------------shapes-------------//
 // rect = Number -> Number -> Shape
 export function rect (width, height) {
     return shape('rect', [width, height], identity(), {});
 }
+// square = Number -> Shape
+export function square (length) {
+    return rect(length, length);
+}
 
-// export function oval (width, height) {}
-// export function square (length) {}
-// export function ngon (n, radius) {}
-// export function polygon(corners) {}
+// oval = Float -> Float -> Shape
+export function oval (width, height) {
+    return shape('oval', [width, height], identity(), {});
+}
 
-// Shape -> Shape
+// circle = Float -> Shape
+export function circle(radius) {
+    return oval(radius, radius);
+}
+
+// regular polygon
+// ngon = Integer -> Float -> Shape
+export function ngon (n, radius) {
+    return shape('ngon', [n, radius], identity(), {});
+}
+
+// polygon = List<Float, Float> -> Shape
+export function polygon(corners) {
+    return shape('polygon', corners, identity(), {});
+}
+
+//--------------styles-------------//
+// style = Style ->  Shape -> Shape
 function style (effect) {
     return (s => shape.apply(null, s().map((v, i) => RENDERABLE_STYLE === i ? Object.assign({}, v, effect) : v)));
 }
 
-// filled = Color -> Shape
+// filled = Color -> Style
 export function filled (color) {
     const effect = { fill: color };
     return style(effect);
 }
 
+// stroked = Color -> Style
 export function stroked (color) {
     const effect = { stroke: color };
     return style(effect);
