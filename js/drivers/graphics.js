@@ -45,14 +45,15 @@ export function polygon(corners) {
 }
 
 //--------------styles-------------//
+// Effect = Color ? Gradient
 // style = Style ->  Shape -> Shape
 function style (effect) {
     return (s => shape.apply(null, s().map((v, i) => RENDERABLE_STYLE === i ? Object.assign({}, v, effect) : v)));
 }
 
-// filled = Color -> Style
-export function filled (color) {
-    const effect = { fill: color };
+// filled = Effect -> Style
+export function filled (fstyle) {
+    const effect = { fill: fstyle };
     return style(effect);
 }
 
@@ -64,18 +65,12 @@ export function stroked (color) {
 // linear gradient
 // linearg = [Float, Float] -> [Float, Float] -> List<Float, Color> -> Gradient
 export function linearg (start, end, stops) {
-    const effect = {
-        linear: {start, end, stops}
-    };
-    return style(effect);
+    return {start, end, stops, linear: true};
 }
 // radial gradient
-// linearg = [Float, Float] -> Float -> [Float, Float] -> List<Float, Color> -> Gradient
+// radialg= [Float, Float] -> Float -> [Float, Float] -> List<Float, Color> -> Gradient
 export function radialg (start, innerr, end, outterr, stops) {
-    const effect = {
-        radial: {start, end, stops, innerr, outterr}
-    };
-    return style(effect);
+    return { start, end, stops, innerr, outterr, radial: true};
 }
 
 // // lineStyle = Color -> Float -> LineCap -> LineJoin -> List<Integer> -> Integer -> Style

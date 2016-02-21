@@ -9,9 +9,32 @@ function transaction(next) {
     });
 }
 
-function applyFill(color, next) {
+function applyFill(style, next) {
     return (ctx => {
-        ctx.fillStyle = color;
+        if ('string' === typeof style) {
+            // fill color
+            ctx.fillStyle = style;
+        } else {
+            // fill gradient
+            const gradient = style.linear ?
+                ctx.createLinearGradient(
+                    style.start[0],
+                    style.start[1],
+                    style.end[0],
+                    style.end[1])
+                : ctx.createRadialGradient(
+                    style.start[0],
+                    style.start[1],
+                    style.innerr,
+                    style.end[0],
+                    style.end[1],
+                    style.outterr);
+
+            style.stops.forEach(stop => {
+                gradient.addColorStop.apply(gradient, stop);
+            });
+            ctx.fillStyle = gradient;
+        }
         next(ctx);
         ctx.fill();
     })

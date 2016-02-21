@@ -4,7 +4,22 @@ import {makeCanvas2DDriver} from './drivers/2d';
 
 /*eslint-disable no-unused-vars*/
 import {scale, translate, rotate, shear} from './drivers/transformations';
-import {rect, filled, stroked, oval, ngon, polygon} from './drivers/graphics';
+import {rect, filled, stroked, oval, ngon, polygon, linearg, radialg} from './drivers/graphics';
+
+// image to observable
+const loadImage = function (path) {
+    return Observable.create(observer => {
+        const img = new Image();
+        img.src = path;
+        img.onload = function () {
+            observer.onNext(img);
+            observer.onCompleted();
+        };
+        img.onError = function (err) {
+            observer.onError(err);
+        };
+    });
+}
 /*eslint-enable no-unused-vars*/
 
 function main(/*{canvas2D}*/) {
@@ -35,9 +50,9 @@ function main(/*{canvas2D}*/) {
             );
 
     const p1$ = Observable.of(
-            stroked('red')
+            filled(radialg([0, 0], 10, [0, 150], 200, [[0, 'red'], [0.5, 'yellow'], [1, 'orange']]))
                 (polygon([[0,0], [100, 40], [40, 130]]))
-                // (translate(100, 100))
+                (translate(100, 100))
             );
 
     const r1$ = Observable.of(
