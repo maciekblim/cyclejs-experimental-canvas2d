@@ -61,3 +61,23 @@ export function stroked (color) {
     const effect = { stroke: color };
     return style(effect);
 }
+// linear gradient
+// linearg = [Float, Float] -> [Float, Float] -> List<Float, Color> -> Gradient
+export function linearg (start, end, stops) {
+    const effect = {
+        linear: {start, end, stops}
+    };
+    return style(effect);
+}
+// radial gradient
+// linearg = [Float, Float] -> Float -> [Float, Float] -> List<Float, Color> -> Gradient
+export function radialg (start, innerr, end, outterr, stops) {
+    const effect = {
+        radial: {start, end, stops, innerr, outterr}
+    };
+    return style(effect);
+}
+
+// // lineStyle = Color -> Float -> LineCap -> LineJoin -> List<Integer> -> Integer -> Style
+// export function lineStyle (color, width, cap, join, dashing, dashOffset) {
+// }

@@ -36,7 +36,6 @@ function main(/*{canvas2D}*/) {
 
     const p1$ = Observable.of(
             stroked('red')
-                // nope something is wrong
                 (polygon([[0,0], [100, 40], [40, 130]]))
                 // (translate(100, 100))
             );

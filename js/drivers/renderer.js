@@ -111,7 +111,7 @@ function drawNgon (args) {
 }
 
 function drawPolygon (args) {
-    const head = args.slice(0, 1);
+    const head = [].concat.apply([], args.slice(0, 1)); // get 1st element and flatten list
     const tail = args.slice(1);
     return (ctx => {
         ctx.beginPath();
